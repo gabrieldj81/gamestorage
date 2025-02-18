@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="en-us">
-	<head>
+<html lang="en-us"><head>
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -256,17 +254,22 @@
 			</div>
 		</div>
 		<div id="game" class="container">
-			<canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+			<canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 			<div class="info-overlay" id="loading">
 				<div id="spinner"></div>
-				<div id="status">Downloading...</div>
+				<div id="status">downloading...</div>
 				<div>
-					<progress value="0" max="100" id="progress" hidden=1></progress>  
+					<progress value="0" max="1" id="progress" hidden=""></progress>  
 				</div>
 			</div>
-			<div class="info-overlay" id="select-version">
+			<div class="info-overlay" id="select-version" style="display: block;">
 				<p>
-					<a href="#" id="load-minimal-version">Start Game</a><br/>
+					<a href="#" id="load-full-version">FULL VERSION</a><br>
+					the complete game ~144mb
+				</p>
+				<p>
+					<a href="#" id="load-minimal-version">MINIMAL VERSION</a><br>
+					no intro, no music ~11mb
 				</p>
 			</div>
 			<!-- button enums from src/input.h -->
@@ -284,8 +287,8 @@
 			<div class="button button-pill" style="left: 68vw; top: 1vw" data-button="40"><div>pause</div></div>
 		</div>
 			
-		</div>
-		<script type='text/javascript'>
+		
+		<script type="text/javascript">
 			var loadScript = (ev, src) => {
 				ev.preventDefault();
 
@@ -398,5 +401,6 @@
 				};
 			};
 		</script>
-	</body>
-</html>
+	
+
+</body></html>
