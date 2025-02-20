@@ -1,0 +1,16 @@
+{
+"companyName": "DefaultCompany",
+"productName": "3D Lego Shooter",
+"productVersion": "0.1",
+"dataUrl": "Lego Shooter WebGL.data.unityweb",
+"wasmCodeUrl": "Lego Shooter WebGL.wasm.code.unityweb",
+"wasmFrameworkUrl": "Lego Shooter WebGL.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0","WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.4.37f1"
+}
