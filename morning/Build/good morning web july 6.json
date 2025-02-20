@@ -1,0 +1,14 @@
+{
+"companyName": "DefaultCompany",
+"productName": "good morning",
+"dataUrl": "good morning web july 6.data.unityweb",
+"wasmCodeUrl": "good morning web july 6.wasm.code.unityweb",
+"wasmFrameworkUrl": "good morning web july 6.wasm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"backgroundUrl": "good morning web july 6.jpg",
+"splashScreenStyle": "Light",
+"backgroundColor": "#FFFFFF",
+"cacheControl": {"default": "must-revalidate"}
+}
