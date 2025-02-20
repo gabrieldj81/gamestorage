@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save File & Cookie Manager</title>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/fonts/fonts.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("");
+            background-color: #141414;
+        }
+
+        .selected {
+            background-color: var(--secondary-color) !important;
+            color: var(--primary-color) !important;
+            text-decoration: underline !important;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color) !important;
+            color: var(--primary-color) !important;
+        }
+
+        #fileList,
+        #cookieList {
+            margin: 10px;
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow items to wrap to the next line */
+            justify-content: space-between;
+            /* Distribute items evenly along the main axis */
+        }
+
+        #fileList li,
+        #cookieList li {
+            color: white;
+            text-shadow: 0px 0px 4px black, 0px 0px 4px black;
+            width: calc(33.33% - 20px);
+            /* Adjust width for three items per row */
+            margin-bottom: 20px;
+            /* Adjust spacing between rows */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            /* Ensure padding and border are included in the width */
+            position: relative;
+        }
+
+        #fileList li span,
+        #cookieList li span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Add ellipsis for long text */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            max-width: calc(100% - 120px);
+            /* Adjust max-width to accommodate the button */
+            font-size: 14px;
+            /* Adjust font size */
+        }
+
+        #fileList li button,
+        #cookieList li button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        h2 {
+            margin: 10px;
+            color: white;
+            text-shadow: 0px 0px 4px black, 0px 0px 5px black;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            font-family: "M Plus Rounded 1c", sans-serif;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-size: 110%;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #uploadForm {
+            margin-bottom: 20px;
+        }
+
+        .fixed-background {
+  position: fixed; /* Fixes the position relative to the viewport */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  z-index: -999 !important; /* Ensures it's behind other content */
+  visibility: visible !important;
+  background-size: cover; /* Scale the image to cover the entire div */
+  background-repeat: repeat !important; /* Repeat the image */
+  background-position: center; /* Center the image */
+}
+
+
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <br><br><br><br><br>
+    <form id="uploadForm" style="color: white; padding: 0.5vw;">
+        <input type="file" id="fileInput" style="text-shadow: 0px 0px 4px black, 0px 0px 4px black;" />
+        <button type="submit">Upload</button>
+    </form>
+    <button id="selectAll">Select All</button> 
+    <h2>Local Storage</h2> 
+    <ul id="fileList"></ul>
+    <h2>Cookies</h2>
+    <ul id="cookieList"></ul> 
+    <button id="downloadSelected">Download Selected</button>
+    <button id="deleteSelected">Delete Selected</button>
+    <br><br>
+    <center style="margin-bottom: 5vh; margin-top: 4vh; display: none;"><embed
+            src="https://coolubg.github.io/coolubg-list/blank.swf"></embed></center>
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const fileList = document.getElementById("fileList");
+        const cookieList = document.getElementById("cookieList"); // Added cookieList
+        const selectedFiles = new Set();
+
+        // Function to create list item with a checkbox and view data button for files
+        function createFileListItem(key, value) {
+            const listItem = document.createElement("li");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    selectedFiles.add(key);
+                } else {
+                    selectedFiles.delete(key);
+                }
+            });
+            listItem.appendChild(checkbox);
+            listItem.appendChild(document.createTextNode(`${key}`));
+
+            // Create a view data button
+            const viewDataButton = document.createElement("button");
+            viewDataButton.textContent = "View Data";
+            viewDataButton.addEventListener("click", () => {
+                const win = window.open("", "_blank");
+                win.document.write("<pre>" + value + "</pre>");
+                win.document.close();
+            });
+            listItem.appendChild(viewDataButton);
+
+            return listItem;
+        }
+
+        // Function to create list item with a checkbox and view data button for cookies
+        function createCookieListItem(name) {
+            const listItem = document.createElement("li");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    selectedFiles.add(name);
+                } else {
+                    selectedFiles.delete(name);
+                }
+            });
+            listItem.appendChild(checkbox);
+            listItem.appendChild(document.createTextNode(`${name}`));
+
+            // Create a view data button
+            const viewDataButton = document.createElement("button");
+            viewDataButton.textContent = "View Data";
+            viewDataButton.addEventListener("click", () => {
+                const win = window.open("", "_blank");
+                win.document.write("<pre> " + getCookie(name) + "</pre>");
+                win.document.close();
+            });
+            listItem.appendChild(viewDataButton);
+
+            return listItem;
+        }
+
+        // Display all keys and values in local storage
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            fileList.appendChild(createFileListItem(key, value));
+        }
+
+        // Display all cookies with their name
+        const cookies = document.cookie.split("; ");
+        cookies.forEach(cookie => {
+            const [name] = cookie.split("=");
+            cookieList.appendChild(createCookieListItem(name));
+        });
+
+        // Function to get cookie value by name
+        function getCookie(name) {
+            const cookies = document.cookie.split("; ");
+            for (let cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split("=");
+                if (cookieName === name) return cookieValue;
+            }
+            return "";
+        }
+
+        // Handle file upload
+        document
+            .getElementById("uploadForm")
+            .addEventListener("submit", function (event) {
+                event.preventDefault();
+                const file = fileInput.files[0];
+                const fileName = file.name;
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const fileData = event.target.result;
+                    const listItem = createFileListItem(fileName, fileData);
+                    fileList.appendChild(listItem);
+                    localStorage.setItem(fileName, fileData);
+                };
+                reader.readAsText(file);
+            });
+
+        // Handle file download
+        document
+            .getElementById("downloadSelected")
+            .addEventListener("click", function () {
+                selectedFiles.forEach((key) => {
+                    const blob = new Blob([localStorage.getItem(key)], {
+                        type: "application/octet-stream",
+                    });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = key;
+                    link.click();
+                });
+            });
+
+        // Handle file deletion
+        document
+            .getElementById("deleteSelected")
+            .addEventListener("click", function () {
+                if (
+                    confirm(
+                        `Are you sure you want to delete ${selectedFiles.size} selected file(s)?`
+                    )
+                ) {
+                    selectedFiles.forEach((key) => {
+                        localStorage.removeItem(key);
+                        fileList.removeChild(
+                            [...fileList.children].find((child) =>
+                                child.textContent.includes(key)
+                            )
+                        );
+                    });
+                    selectedFiles.clear();
+                }
+            });
+
+        // Handle select all button
+        document.getElementById("selectAll").addEventListener("click", function () {
+            const checkboxes = document.querySelectorAll('#fileList input[type="checkbox"], #cookieList input[type="checkbox"]');
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = true;
+                selectedFiles.add(checkbox.nextSibling.textContent);
+            });
+        });
+    </script>
+</body>
+
+</html>
