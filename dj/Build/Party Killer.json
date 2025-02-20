@@ -1,0 +1,16 @@
+{
+"companyName": "Brackeys",
+"productName": "Party Killer",
+"productVersion": "1",
+"dataUrl": "Party Killer.data.unityweb",
+"wasmCodeUrl": "Party Killer.wasm.code.unityweb",
+"wasmFrameworkUrl": "Party Killer.wasm.framework.unityweb",
+"graphicsAPI": ["WebGL 2.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#000000",
+"cacheControl": {"default": "must-revalidate"},
+"developmentBuild": false,
+"multithreading": false,
+"unityVersion": "2019.3.0f3"
+}
